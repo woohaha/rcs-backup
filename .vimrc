@@ -97,3 +97,4 @@ autocmd BufRead,BufNewFile *.sh map <F11> :% w !bash<CR>
 
 "Auto Shebang"
 autocmd BufNewFile *.py 0put =\"#!/usr/bin/env python\<nl># -*- coding: utf-8 -*-\<nl>\"|$
+autocmd BufNewFile *.lua 0put =\"#!/usr/bin/env lua\<nl>\"|$
