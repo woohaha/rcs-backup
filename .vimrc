@@ -34,6 +34,12 @@ Bundle 'corntrace/bufexplorer'
 Bundle 'solarized'
 Bundle 'bling/vim-airline'
 
+"<Shift-Enter> to Change Line when AutoClose"
+"Note: the char between imap and <C-o> was create with C-v S-CR"
+"<Ctrl-l> to jump out paired
+imap <C-l> <Right>
+imap  <C-o>o
+
 "solarized theme setting
 set background=dark
 colorscheme solarized
@@ -122,13 +128,13 @@ func FormatSrc()
     if &filetype == 'py' || &filetype == 'python'
         exec "!autopep8 -i %"
     elseif &filetype == 'perl'
-        exec "!astyle --style=gnu --suffix=none --lineend=linux %"
+        exec "% !astyle --style=gnu --suffix=none --lineend=linux"
     elseif &filetype == 'xml'
-        exec "!astyle --style=gnu --suffix=none --lineend=linux %"
+        exec "% !astyle --style=gnu --suffix=none --lineend=linux"
     elseif &filetype == 'cpp' || &filetype == 'hpp'
-        exec "!astyle --style=gnu --one-line=keep-statements -a --suffix=none 2>/dev/null --lineend=linux %"
+        exec "% !astyle --style=gnu --suffix=none --lineend=linux"
     elseif &filetype == 'c'
-        exec "!astyle --style=gnu --one-line=keep-statements -a --suffix=none --lineend=linux %"
+        exec "% !astyle --style=gnu --suffix=none --lineend=linux"
     endif
 endfunc
 
