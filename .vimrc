@@ -1,17 +1,21 @@
 filetype plugin on
 syntax on
+set encoding=utf-8
 set fenc=utf-8
 set fencs=utf-8,usc-bom,euc-jp,gb18030,gbk,gb2312,cp936
 set number
 set si
-set tabstop=5
+set expandtab
+set tabstop=4
 set sw=4
+set shiftwidth=4
 set showmatch
+set incsearch
+set t_Co=256
 let g:BASH_AuthorName   = 'woohaha'
 let g:BASH_Email        = 'realwoohaha@gmail.com'
 let g:BASH_Company      = ''
 
-execute pathogen#infect()
 set nocompatible
 filetype off
 set rtp+=~/.vim/bundle/vundle/
@@ -26,8 +30,14 @@ Bundle 'gg/python.vim'
 Bundle 'taglist.vim'
 Bundle 'mru.vim'
 Bundle 'AutoClose'
-Bundle 'Surround.vim'
 Bundle 'corntrace/bufexplorer'
+Bundle 'solarized'
+Bundle 'bling/vim-airline'
+
+"solarized theme setting
+set background=dark
+colorscheme solarized
+let g:solarized_termcolors=256
 
 filetype plugin indent on
 
@@ -88,13 +98,52 @@ let Tlist_Use_Right_Window = 1
 let Tlist_File_Fold_Auto_Close = 1
 let Tlist_Exit_OnlyWindow = 1
 
-"Run Python
-autocmd BufRead,BufNewFile *.py map <F5> :% w !python<CR>
-""autocmd BufRead,BufNewFile *.py map <F6> :1, w !ipython --no-confirm-exit<CR>
-autocmd BufRead,BufNewFile *.py map <F6> :1, w !python<CR>
+"Run Python(abandoned)
+"autocmd BufRead,BufNewFile *.py map <F5> :% w !python3<CR>
+"autocmd BufRead,BufNewFile *.py map <F6> :1, w !python3<CR>
 "Run Bash Shell
-autocmd BufRead,BufNewFile *.sh map <F11> :% w !bash<CR> 
+"autocmd BufRead,BufNewFile *.sh map <F11> :% w !bash<CR> 
+
+"Detect FileType to run proper interp"
+autocmd FileType python map <F5> :% w !python3<CR>
+autocmd FileType sh map <F5> :% w !$SHELL<CR>
+autocmd FileType python map <F6> :1, w !python3<CR>
+autocmd FileType sh map <F6> :1, w !$SHELL<CR>
+autocmd FileType python map <C-F5> :% w !python<CR>
+autocmd FileType sh map <C-F5> :% w !bash<CR>
+autocmd FileType python map <C-F6> :1, w !python<CR>
+autocmd FileType sh map <C-F6> :1, w !bash<CR>
+
+"Auto Format"
+map <F11> :call FormatSrc()<CR>
+
+func FormatSrc()
+    exec "w"
+    if &filetype == 'py' || &filetype == 'python'
+        exec "!autopep8 -i %"
+    elseif &filetype == 'perl'
+        exec "!astyle --style=gnu --suffix=none --lineend=linux %"
+    elseif &filetype == 'xml'
+        exec "!astyle --style=gnu --suffix=none --lineend=linux %"
+    elseif &filetype == 'cpp' || &filetype == 'hpp'
+        exec "!astyle --style=gnu --one-line=keep-statements -a --suffix=none 2>/dev/null --lineend=linux %"
+    elseif &filetype == 'c'
+        exec "!astyle --style=gnu --one-line=keep-statements -a --suffix=none --lineend=linux %"
+    endif
+endfunc
 
 "Auto Shebang"
+autocmd BufNewFile *.sh 0put =\"#!/usr/bin/env bash\<nl>\"|$
 autocmd BufNewFile *.py 0put =\"#!/usr/bin/env python\<nl># -*- coding: utf-8 -*-\<nl>\"|$
 autocmd BufNewFile *.lua 0put =\"#!/usr/bin/env lua\<nl>\"|$
+
+"Powerline
+set laststatus=2
+"let g:Powerline_symbols = 'fancy'
+set fillchars+=stl:\ ,stlnc:\
+
+"Airline"
+let g:airline_powerline_fonts = 1
+let g:airline_theme='luna'
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#left_alt_sep = '|'
