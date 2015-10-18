@@ -1,8 +1,5 @@
 filetype plugin on
 syntax on
-set encoding=utf-8
-set fenc=utf-8
-set fencs=utf-8,usc-bom,euc-jp,gb18030,gbk,gb2312,cp936
 set number
 set si
 set expandtab
@@ -12,30 +9,57 @@ set shiftwidth=4
 set showmatch
 set incsearch
 set t_Co=256
+set nowritebackup
+set nobackup
+set autochdir
+set magic
+let mapleader = ","
+function! MySys()
+    if has("win32")
+        return "windows"
+    else
+        return "linux"
+    endif
+endfunction
 let g:BASH_AuthorName   = 'woohaha'
 let g:BASH_Email        = 'realwoohaha@gmail.com'
 let g:BASH_Company      = ''
 
 set nocompatible
 filetype off
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
+if MySys() == "windows"
+    set rtp+=~/vimfiles/bundle/Vundle.vim/
+    call vundle#begin('~/vimfiles')
+else
+    set rtp+=~/.vim/bundle/Vundle.vim
+    call vundle#begin()
+endif
 
-Bundle 'gmarik/vundle'
+"Plugin 'VundleVim/Vundle.vim'
 " The bundles you install will be listed here
-Bundle 'scrooloose/nerdtree'
-Bundle 'klen/python-mode'
-Bundle 'python.vim--Vasiliev'
-Bundle 'gg/python.vim'
-Bundle 'taglist.vim'
-Bundle 'mru.vim'
-Bundle 'AutoClose'
-Bundle 'corntrace/bufexplorer'
-Bundle 'solarized'
-Bundle 'bling/vim-airline'
+Plugin 'scrooloose/nerdtree'
+"Plugin 'klen/python-mode'
+"Plugin 'python.vim--Vasiliev'
+"Plugin 'gg/python.vim'
+"Plugin 'taglist.vim'
+Plugin 'mru.vim'
+Plugin 'jquery.vim'
+Plugin 'jiangmiao/auto-pairs'
+Plugin 'corntrace/bufexplorer'
+Plugin 'solarized'
+Plugin 'bling/vim-airline'
+Plugin 'mattn/vimtweak'
+Plugin 'mattn/transparency-windows-vim'
+"HTML Snipper
+Plugin 'mattn/emmet-vim'
+
+Plugin 'scrooloose/nerdcommenter'
+call vundle#end()
+filetype plugin indent on
 
 "<Shift-Enter> to Change Line when AutoClose"
 "Note: the char between imap and <C-o> was create with C-v S-CR"
+"If not work use <C-j> to return in INSERT mod
 "<Ctrl-l> to jump out paired
 imap <C-l> <Right>
 imap  <C-o>o
@@ -45,14 +69,13 @@ set background=dark
 colorscheme solarized
 let g:solarized_termcolors=256
 
-filetype plugin indent on
 
 augroup vimrc_autocmds
-	autocmd!
-	" highlight characters past column 120
-	autocmd FileType python highlight Excess ctermbg=DarkGrey guibg=Black
-	autocmd FileType python match Excess /\%80v.*/
-	autocmd FileType python set nowrap
+    autocmd!
+    " highlight characters past column 120
+    autocmd FileType python highlight Excess ctermbg=DarkGrey guibg=Black
+    autocmd FileType python match Excess /\%80v.*/
+    autocmd FileType python set nowrap
 augroup END
 
 map <F2> :NERDTreeToggle<CR>
@@ -153,3 +176,39 @@ let g:airline_powerline_fonts = 1
 let g:airline_theme='luna'
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#left_alt_sep = '|'
+
+"gvim for windows
+"set guifont=DejaVu\ Sans\ Mono:h12
+set guifont=hack:h12
+set gcr=a:block-blinkon0
+set guioptions-=m 
+set guioptions-=T
+map <silent> <F1> :if &guioptions =~# 'T' <Bar>
+            \set guioptions-=T <Bar>
+            \set guioptions-=m <bar>
+            \else <Bar>
+            \set guioptions+=T <Bar>
+            \set guioptions+=m <Bar>
+            \endif<CR>
+set guifont=DejaVu\ Sans\ Mono:h12
+
+"Fix CJKV Characters Programs
+set encoding=utf-8
+if MySys() == "windows"
+    language message zh_CN.UTF-8
+endif
+set ambiwidth=double
+set fenc=utf-8
+set fencs=utf-8,usc-bom,euc-jp,gb18030,gbk,gb2312,cp936
+set fo+=mB
+source $VIMRUNTIME/delmenu.vim
+source $VIMRUNTIME/menu.vim
+
+"AutoLoad vimrc after modifed
+if MySys() == "windows"
+    " autocmd! bufwritepost _vimrc source $VIM/_vimrc
+    autocmd! bufwritepost _vimrc source %
+else
+    autocmd! bufwritepost .vimrc source $MYVIMRC
+endif
+
