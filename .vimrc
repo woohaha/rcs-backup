@@ -1,5 +1,7 @@
 filetype plugin on
 syntax on
+set ignorecase smartcase
+set relativenumber
 set number
 set si
 set expandtab
@@ -13,12 +15,19 @@ set nowritebackup
 set nobackup
 set autochdir
 set magic
+set clipboard=unnamed "use OS paste board
+set cursorline cursorcolumn
 let mapleader = ","
 function! MySys()
     if has("win32")
         return "windows"
     else
-        return "linux"
+        let s:uname = system("uname")
+        if s:uname == "Darwin\n"
+            return "mac"
+        else
+            return "linux"
+        endif
     endif
 endfunction
 let g:BASH_AuthorName   = 'woohaha'
@@ -43,17 +52,23 @@ Plugin 'scrooloose/nerdtree'
 "Plugin 'gg/python.vim'
 "Plugin 'taglist.vim'
 Plugin 'mru.vim'
-Plugin 'jquery.vim'
+"Plugin 'jquery.vim'
 Plugin 'jiangmiao/auto-pairs'
 Plugin 'corntrace/bufexplorer'
 Plugin 'solarized'
 Plugin 'bling/vim-airline'
 Plugin 'mattn/vimtweak'
-Plugin 'mattn/transparency-windows-vim'
+Plugin 'aklt/plantuml-syntax'
+"Plugin 'mattn/transparency-windows-vim'
 "HTML Snipper
 Plugin 'mattn/emmet-vim'
-
 Plugin 'scrooloose/nerdcommenter'
+Plugin 'vim-airline/vim-airline-themes'
+Plugin 'luochen1990/rainbow'
+if MySys() == "mac"
+    Plugin 'rizzatti/dash.vim'
+endif
+
 call vundle#end()
 filetype plugin indent on
 
@@ -63,6 +78,12 @@ filetype plugin indent on
 "<Ctrl-l> to jump out paired
 imap <C-l> <Right>
 imap  <C-o>o
+
+"use TAB to indent line
+nmap <tab> V>
+nmap <s-tab> V<
+vmap <tab> >gv
+vmap <s-tab> <gv
 
 "solarized theme setting
 set background=dark
@@ -136,6 +157,9 @@ let Tlist_Exit_OnlyWindow = 1
 "Detect FileType to run proper interp"
 autocmd FileType python map <F5> :% w !python3<CR>
 autocmd FileType sh map <F5> :% w !$SHELL<CR>
+autocmd FileType plantuml nnoremap <F5> :w<CR> :silent make<CR>
+autocmd FileType plantuml inoremap <F5> <Esc>:w<CR>:silent make<CR>
+autocmd FileType plantuml vnoremap <F5> :<C-U>:w<CR>:silent make<CR
 autocmd FileType python map <F6> :1, w !python3<CR>
 autocmd FileType sh map <F6> :1, w !$SHELL<CR>
 autocmd FileType python map <C-F5> :% w !python<CR>
@@ -177,9 +201,10 @@ let g:airline_theme='luna'
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#left_alt_sep = '|'
 
+
 "gvim for windows
 "set guifont=DejaVu\ Sans\ Mono:h12
-set guifont=hack:h12
+"set guifont=hack:h12
 set gcr=a:block-blinkon0
 set guioptions-=m 
 set guioptions-=T
@@ -190,7 +215,8 @@ map <silent> <F1> :if &guioptions =~# 'T' <Bar>
             \set guioptions+=T <Bar>
             \set guioptions+=m <Bar>
             \endif<CR>
-set guifont=DejaVu\ Sans\ Mono:h12
+"set guifont=DejaVu\ Sans\ Mono:h12
+set guifont=Monaco\ for\ Powerline:h11
 
 "Fix CJKV Characters Programs
 set encoding=utf-8
@@ -204,6 +230,8 @@ set fo+=mB
 source $VIMRUNTIME/delmenu.vim
 source $VIMRUNTIME/menu.vim
 
+let g:plantuml_executable_script="~/bin/genUML.sh"
+
 "AutoLoad vimrc after modifed
 if MySys() == "windows"
     " autocmd! bufwritepost _vimrc source $VIM/_vimrc
@@ -212,3 +240,5 @@ else
     autocmd! bufwritepost .vimrc source $MYVIMRC
 endif
 
+"PHP Configure
+autocmd FileType php setlocal iskeyword+=$
