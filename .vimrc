@@ -37,8 +37,8 @@ let g:BASH_Company      = ''
 set nocompatible
 filetype off
 if MySys() == "windows"
-    set rtp+=~/vimfiles/bundle/Vundle.vim/
-    call vundle#begin('~/vimfiles')
+    set rtp+=$HOME/vimfile/bundle/Vundle.vim/
+    call vundle#begin('$HOME/vimfile/bundle/')
 else
     set rtp+=~/.vim/bundle/Vundle.vim
     call vundle#begin()
@@ -59,7 +59,9 @@ Plugin 'solarized'
 Plugin 'bling/vim-airline'
 Plugin 'mattn/vimtweak'
 Plugin 'aklt/plantuml-syntax'
-"Plugin 'mattn/transparency-windows-vim'
+"if MySys() == "windows"
+    "Plugin 'mattn/transparency-windows-vim'
+"ndif
 "HTML Snipper
 Plugin 'mattn/emmet-vim'
 Plugin 'scrooloose/nerdcommenter'
@@ -205,24 +207,24 @@ let g:airline#extensions#tabline#left_alt_sep = '|'
 "gvim for windows
 "set guifont=DejaVu\ Sans\ Mono:h12
 "set guifont=hack:h12
-set gcr=a:block-blinkon0
-set guioptions-=m 
-set guioptions-=T
-map <silent> <F1> :if &guioptions =~# 'T' <Bar>
-            \set guioptions-=T <Bar>
-            \set guioptions-=m <bar>
-            \else <Bar>
-            \set guioptions+=T <Bar>
-            \set guioptions+=m <Bar>
-            \endif<CR>
-"set guifont=DejaVu\ Sans\ Mono:h12
-set guifont=Monaco\ for\ Powerline:h11
-
-"Fix CJKV Characters Programs
-set encoding=utf-8
 if MySys() == "windows"
+    set gcr=a:block-blinkon0
+    set guioptions-=m 
+    set guioptions-=T
+    map <silent> <F1> :if &guioptions =~# 'T' <Bar>
+                \set guioptions-=T <Bar>
+                \set guioptions-=m <bar>
+                \else <Bar>
+                \set guioptions+=T <Bar>
+                \set guioptions+=m <Bar>
+                \endif<CR>
+    "set guifont=DejaVu\ Sans\ Mono:h12
+    set guifont=Monaco\ for\ Powerline:h11
+
+    "Fix CJKV Characters Programs
     language message zh_CN.UTF-8
 endif
+set encoding=utf-8
 set ambiwidth=double
 set fenc=utf-8
 set fencs=utf-8,usc-bom,euc-jp,gb18030,gbk,gb2312,cp936
@@ -235,7 +237,7 @@ let g:plantuml_executable_script="~/bin/genUML.sh"
 "AutoLoad vimrc after modifed
 if MySys() == "windows"
     " autocmd! bufwritepost _vimrc source $VIM/_vimrc
-    autocmd! bufwritepost _vimrc source %
+    autocmd! bufwritepost .vimrc source %
 else
     autocmd! bufwritepost .vimrc source $MYVIMRC
 endif
